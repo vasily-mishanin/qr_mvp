@@ -6,7 +6,6 @@ import {
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
-
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
 import appCss from '../styles.css?url'
@@ -44,12 +43,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-dvh w-screen overflow-hidden">
       <head>
         <HeadContent />
       </head>
-      <body>
-        {children}
+      <body className="h-full overflow-hidden">
+        <div className="flex flex-col h-dvh overflow-hidden">{children}</div>
         <TanStackDevtools
           config={{
             position: 'bottom-right',
