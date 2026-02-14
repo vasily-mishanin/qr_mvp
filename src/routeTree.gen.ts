@@ -9,14 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AppLayoutRouteImport } from './routes/_appLayout'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
+import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppLayoutAppIndexRouteImport } from './routes/_appLayout/app/index'
-import { Route as AppLayoutAppWorkerIndexRouteImport } from './routes/_appLayout/app/worker/index'
-import { Route as AppLayoutAppCustomerIndexRouteImport } from './routes/_appLayout/app/customer/index'
+import { Route as AuthSignupIndexRouteImport } from './routes/_auth/signup/index'
+import { Route as AuthSigninIndexRouteImport } from './routes/_auth/signin/index'
+import { Route as AppWorkerIndexRouteImport } from './routes/_app/worker/index'
+import { Route as AppCustomerIndexRouteImport } from './routes/_app/customer/index'
 
-const AppLayoutRoute = AppLayoutRouteImport.update({
-  id: '/_appLayout',
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -24,69 +30,87 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppLayoutAppIndexRoute = AppLayoutAppIndexRouteImport.update({
-  id: '/app/',
-  path: '/app/',
-  getParentRoute: () => AppLayoutRoute,
+const AuthSignupIndexRoute = AuthSignupIndexRouteImport.update({
+  id: '/signup/',
+  path: '/signup/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
-const AppLayoutAppWorkerIndexRoute = AppLayoutAppWorkerIndexRouteImport.update({
-  id: '/app/worker/',
-  path: '/app/worker/',
-  getParentRoute: () => AppLayoutRoute,
+const AuthSigninIndexRoute = AuthSigninIndexRouteImport.update({
+  id: '/signin/',
+  path: '/signin/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
-const AppLayoutAppCustomerIndexRoute =
-  AppLayoutAppCustomerIndexRouteImport.update({
-    id: '/app/customer/',
-    path: '/app/customer/',
-    getParentRoute: () => AppLayoutRoute,
-  } as any)
+const AppWorkerIndexRoute = AppWorkerIndexRouteImport.update({
+  id: '/worker/',
+  path: '/worker/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppCustomerIndexRoute = AppCustomerIndexRouteImport.update({
+  id: '/customer/',
+  path: '/customer/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/app/': typeof AppLayoutAppIndexRoute
-  '/app/customer/': typeof AppLayoutAppCustomerIndexRoute
-  '/app/worker/': typeof AppLayoutAppWorkerIndexRoute
+  '/customer/': typeof AppCustomerIndexRoute
+  '/worker/': typeof AppWorkerIndexRoute
+  '/signin/': typeof AuthSigninIndexRoute
+  '/signup/': typeof AuthSignupIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/app': typeof AppLayoutAppIndexRoute
-  '/app/customer': typeof AppLayoutAppCustomerIndexRoute
-  '/app/worker': typeof AppLayoutAppWorkerIndexRoute
+  '/customer': typeof AppCustomerIndexRoute
+  '/worker': typeof AppWorkerIndexRoute
+  '/signin': typeof AuthSigninIndexRoute
+  '/signup': typeof AuthSignupIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_appLayout': typeof AppLayoutRouteWithChildren
-  '/_appLayout/app/': typeof AppLayoutAppIndexRoute
-  '/_appLayout/app/customer/': typeof AppLayoutAppCustomerIndexRoute
-  '/_appLayout/app/worker/': typeof AppLayoutAppWorkerIndexRoute
+  '/_app': typeof AppRouteRouteWithChildren
+  '/_auth': typeof AuthRouteRouteWithChildren
+  '/_app/customer/': typeof AppCustomerIndexRoute
+  '/_app/worker/': typeof AppWorkerIndexRoute
+  '/_auth/signin/': typeof AuthSigninIndexRoute
+  '/_auth/signup/': typeof AuthSignupIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app/' | '/app/customer/' | '/app/worker/'
+  fullPaths: '/' | '/customer/' | '/worker/' | '/signin/' | '/signup/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/app/customer' | '/app/worker'
+  to: '/' | '/customer' | '/worker' | '/signin' | '/signup'
   id:
     | '__root__'
     | '/'
-    | '/_appLayout'
-    | '/_appLayout/app/'
-    | '/_appLayout/app/customer/'
-    | '/_appLayout/app/worker/'
+    | '/_app'
+    | '/_auth'
+    | '/_app/customer/'
+    | '/_app/worker/'
+    | '/_auth/signin/'
+    | '/_auth/signup/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppLayoutRoute: typeof AppLayoutRouteWithChildren
+  AppRouteRoute: typeof AppRouteRouteWithChildren
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_appLayout': {
-      id: '/_appLayout'
+    '/_auth': {
+      id: '/_auth'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof AppLayoutRouteImport
+      preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -96,49 +120,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_appLayout/app/': {
-      id: '/_appLayout/app/'
-      path: '/app'
-      fullPath: '/app/'
-      preLoaderRoute: typeof AppLayoutAppIndexRouteImport
-      parentRoute: typeof AppLayoutRoute
+    '/_auth/signup/': {
+      id: '/_auth/signup/'
+      path: '/signup'
+      fullPath: '/signup/'
+      preLoaderRoute: typeof AuthSignupIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
-    '/_appLayout/app/worker/': {
-      id: '/_appLayout/app/worker/'
-      path: '/app/worker'
-      fullPath: '/app/worker/'
-      preLoaderRoute: typeof AppLayoutAppWorkerIndexRouteImport
-      parentRoute: typeof AppLayoutRoute
+    '/_auth/signin/': {
+      id: '/_auth/signin/'
+      path: '/signin'
+      fullPath: '/signin/'
+      preLoaderRoute: typeof AuthSigninIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
-    '/_appLayout/app/customer/': {
-      id: '/_appLayout/app/customer/'
-      path: '/app/customer'
-      fullPath: '/app/customer/'
-      preLoaderRoute: typeof AppLayoutAppCustomerIndexRouteImport
-      parentRoute: typeof AppLayoutRoute
+    '/_app/worker/': {
+      id: '/_app/worker/'
+      path: '/worker'
+      fullPath: '/worker/'
+      preLoaderRoute: typeof AppWorkerIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/customer/': {
+      id: '/_app/customer/'
+      path: '/customer'
+      fullPath: '/customer/'
+      preLoaderRoute: typeof AppCustomerIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
   }
 }
 
-interface AppLayoutRouteChildren {
-  AppLayoutAppIndexRoute: typeof AppLayoutAppIndexRoute
-  AppLayoutAppCustomerIndexRoute: typeof AppLayoutAppCustomerIndexRoute
-  AppLayoutAppWorkerIndexRoute: typeof AppLayoutAppWorkerIndexRoute
+interface AppRouteRouteChildren {
+  AppCustomerIndexRoute: typeof AppCustomerIndexRoute
+  AppWorkerIndexRoute: typeof AppWorkerIndexRoute
 }
 
-const AppLayoutRouteChildren: AppLayoutRouteChildren = {
-  AppLayoutAppIndexRoute: AppLayoutAppIndexRoute,
-  AppLayoutAppCustomerIndexRoute: AppLayoutAppCustomerIndexRoute,
-  AppLayoutAppWorkerIndexRoute: AppLayoutAppWorkerIndexRoute,
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppCustomerIndexRoute: AppCustomerIndexRoute,
+  AppWorkerIndexRoute: AppWorkerIndexRoute,
 }
 
-const AppLayoutRouteWithChildren = AppLayoutRoute._addFileChildren(
-  AppLayoutRouteChildren,
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+)
+
+interface AuthRouteRouteChildren {
+  AuthSigninIndexRoute: typeof AuthSigninIndexRoute
+  AuthSignupIndexRoute: typeof AuthSignupIndexRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthSigninIndexRoute: AuthSigninIndexRoute,
+  AuthSignupIndexRoute: AuthSignupIndexRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppLayoutRoute: AppLayoutRouteWithChildren,
+  AppRouteRoute: AppRouteRouteWithChildren,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
