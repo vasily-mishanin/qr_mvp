@@ -3,7 +3,7 @@ import { QrCode, BrushCleaning } from 'lucide-react'
 import { QRCodeCanvas } from 'qrcode.react'
 import { FormEvent, useState } from 'react'
 
-export const Route = createFileRoute('/_appLayout/app/customer/')({
+export const Route = createFileRoute('/_app/customer/')({
   component: RouteComponent,
 })
 
@@ -33,7 +33,7 @@ function RouteComponent() {
     <div className="flex-1 p-5 pb-10 flex flex-col-reverse bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
       <section className="mb-40 relative text-center overflow-hidden flex flex-col items-center gap-4">
         {shouldShowQrCode && (
-          <div>
+          <div className="p-4 border rounded-sm border-amber-100 bg-gray-50 radius">
             <QRCodeCanvas value={qrCodeValue} />
           </div>
         )}

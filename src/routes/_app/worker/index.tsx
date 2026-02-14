@@ -4,7 +4,7 @@ import { QrCode } from 'lucide-react'
 
 import { Scanner } from '@yudiel/react-qr-scanner'
 
-export const Route = createFileRoute('/_appLayout/app/worker/')({
+export const Route = createFileRoute('/_app/worker/')({
   component: RouteComponent,
 })
 
